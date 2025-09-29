@@ -1,33 +1,105 @@
+import { icons } from '@/constants/icons';
+import { images } from '@/constants/images';
 import { Tabs } from 'expo-router';
-import React from 'react';
+import { Image, ImageBackground, Text, View } from 'react-native';
 
-import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+const TabIcon = ({
+  focused,
+  icon,
+  label,
+}: {
+  focused: boolean;
+  icon: any;
+  label: string;
+}) => {
+  if (focused) {
+    return (
+      <ImageBackground
+        source={images.highlight}
+        className="flex flex-1  gap-2 flex-row w-full min-h-16 justify-center  items-center mt-4 min-w-[112px] rounded-full overflow-hidden"
+      >
+        <Image source={icon} tintColor={'#151312'} className="size-5" />
+        <Text className="text-white text-sm font-semibold">{label}</Text>
+      </ImageBackground>
+    );
+  }
+  return (
+    <View className="flex flex-1 gap-2 flex-row w-full min-h-14 justify-center items-center mt-4 ">
+      <Image source={icon} tintColor={'#A8B5DB'} className="size-5" />
+    </View>
+  );
+};
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
+export default function Layout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-      }}>
+        tabBarShowLabel: false,
+        tabBarItemStyle: {
+          width: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        tabBarStyle: {
+          backgroundColor: '#0f0d23',
+          borderTopWidth: 0,
+          borderRadius: 50,
+          marginHorizontal: 20,
+          marginBottom: 36,
+          height: 52,
+          position: 'absolute',
+          overflow: 'hidden',
+          borderWidth: 1,
+          borderColor: '#0f0d23',
+        },
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
+          headerShown: false,
           title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          tabBarIcon: ({ focused }) => (
+            <>
+              <TabIcon focused={focused} icon={icons.home} label="Home" />
+            </>
+          ),
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="search"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          headerShown: false,
+          title: 'Search',
+          tabBarIcon: ({ focused }) => (
+            <>
+              <TabIcon focused={focused} icon={icons.search} label="Search" />
+            </>
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="saved"
+        options={{
+          headerShown: false,
+          title: 'Saved',
+          tabBarIcon: ({ focused }) => (
+            <>
+              <TabIcon focused={focused} icon={icons.save} label="Saved" />
+            </>
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          headerShown: false,
+          title: 'Profile',
+          tabBarIcon: ({ focused }) => (
+            <>
+              <TabIcon focused={focused} icon={icons.person} label="Profile" />
+            </>
+          ),
         }}
       />
     </Tabs>
