@@ -7,21 +7,23 @@ import useFetch from '@/services/useFetch';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Image, Text, View } from 'react-native';
+import useDebounce from '../hooks/useDebounce';
 
 export default function Search() {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
+  const { debouncedValue } = useDebounce(searchTerm, 2000);
 
   const {
     data: movies,
     loading: moviesLoading,
     error: moviesError,
     refetch: refetchMovies,
-  } = useFetch(() => fetchMovies({ query: searchTerm }), false);
+  } = useFetch(() => fetchMovies({ query: debouncedValue }), false);
 
   useEffect(() => {
     refetchMovies();
-  }, [searchTerm]);
+  }, [debouncedValue]);
 
   return (
     <View className="flex-1 bg-primary">
@@ -75,6 +77,11 @@ export default function Search() {
                 </Text>
               )}
           </>
+        }
+        ListEmptyComponent={
+          <Text className="text-white text-xl self-center font-bold mb-5">
+            No movies found
+          </Text>
         }
       />
     </View>
